@@ -21,7 +21,9 @@ public class Securityconfig {
         http
                 .csrf(csrf -> csrf.disable()) // Disable CSRF protection
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/register").permitAll() // Allow public access to register endpoint
+                        .requestMatchers("/api/auth/register").permitAll()
+                        .requestMatchers("/api/auth/login").permitAll()
+                        .requestMatchers("/api/media/upload").permitAll()// Allow public access to register endpoint
                         .requestMatchers("/api/admin/**").hasAuthority("ADMIN") // ADMIN-specific paths
                         .requestMatchers("/api/user/**").hasAuthority("USER")   // USER-specific paths
                         .anyRequest().authenticated() // All other requests require authentication

@@ -27,6 +27,10 @@ dependencies {
 	runtimeOnly 'com.microsoft.sqlserver:mssql-jdbc'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	// https://mvnrepository.com/artifact/com.cloudinary/cloudinary-http44
+	implementation 'com.cloudinary:cloudinary-http44:1.39.0'
+
+
 //	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'

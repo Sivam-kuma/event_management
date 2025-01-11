@@ -21,30 +21,45 @@ public class AuthController {
     @Autowired
     private UserService userService;
 
-     private JwtService jwtService;
-     private PasswordEncoder passwordEncoder;
-     @PostMapping("/register")
+    @Autowired
+    private JwtService jwtService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody User user) {
-         if(userService.existsByEmail(user.getEmail())){
-             return ResponseEntity.badRequest().body("Email already exists");
-         }
-         user.setPassword(passwordEncoder.encode(user.getPassword()));
-         if(!"USER".equals(user.getRole()) && !"ADMIN".equals(user.getRole())){
-             return ResponseEntity.badRequest().body("Invalid role");
-         }
-         userService.saveUser(user);
-         return ResponseEntity.ok("User registered successfully");
-     }
-     @PostMapping("/login")
+        if (userService.existsByEmail(user.getEmail())) {
+            return ResponseEntity.badRequest().body("Email already exists");
+        }
+
+        System.out.println("Encoding password for user: " + user.getEmail());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        if (!"USER".equals(user.getRole()) && !"ADMIN".equals(user.getRole())) {
+            return ResponseEntity.badRequest().body("Invalid role");
+        }
+
+        userService.saveUser(user);
+        System.out.println("User registered successfully: " + user.getEmail());
+        return ResponseEntity.ok("User registered successfully");
+    }
+
+    @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest authRequest) {
-         User user = userService.findUserByEmail(authRequest.getEmail())
-                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-         if(!passwordEncoder.matches(authRequest.getPassword(), user.getPassword())){
-             throw new BadCredentialsException("Wrong password");
-         }
-         String token = jwtService.generateToken(user.getId(), user.getRole());
-         return ResponseEntity.ok(new AuthResponse(token));
-     }
+        User user = userService.findUserByEmail(authRequest.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
+        System.out.println("Raw password: " + authRequest.getPassword());
+        System.out.println("Encoded password: " + user.getPassword());
 
+        if (!passwordEncoder.matches(authRequest.getPassword(), user.getPassword())) {
+            throw new BadCredentialsException("Wrong password");
+        }
+
+        String token = jwtService.generateToken(user.getId(), user.getRole());
+        System.out.println("Generated token: " + token);
+        return ResponseEntity.ok(new AuthResponse(token));
+    }
 }
+
