@@ -25,7 +25,7 @@ public class EventpostService {
   }
   public Page<Eventpost> getAllEvents(String name, String description, String venue, String image,
                                       String category, String artist, String fare,
-                                     long userid, int page, int size) {
+                                     Long userid, int page, int size) {
     Pageable pageable = PageRequest.of(page, size);
     return eventpostRepository.findByDynamicFilters(userid,name, description, venue, image, category, artist, fare, pageable);
   }
