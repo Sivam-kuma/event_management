@@ -17,7 +17,20 @@ public class EventpostService {
   @Autowired
   private EventpostRepository eventpostRepository;
   public Eventpost addEventpost(Eventpost eventpost) {
+    List<Eventpost> eventposts = eventpostRepository.findAll();
+    for (Eventpost existingEvent : eventposts) {
+      if (existingEvent.getArtist().equals(eventpost.getArtist()) &&
+              existingEvent.getCategory().equals(eventpost.getCategory()) &&
+              existingEvent.getDescription().equals(eventpost.getDescription()) &&
+              existingEvent.getName().equals(eventpost.getName()) &&
+              existingEvent.getVenue().equals(eventpost.getVenue()) &&
+              existingEvent.getFare().equals(eventpost.getFare())) {
+        return null; // Immediately exits the function
+      }
+    }
+// If no match found, proceed to save the new record
     return eventpostRepository.save(eventpost);
+
   }
   public Page<Eventpost> getEventpostByUserid(String name, String description, String venue, String image, String category, String artist, String fare, long userid, int page, int size) {
     Pageable pageable= PageRequest.of(page, size);
