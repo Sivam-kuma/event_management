@@ -26,7 +26,7 @@ public class Securityconfig {
         http
                 .csrf(csrf -> csrf.disable()) // Disable CSRF protection
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/register", "/api/auth/login").permitAll() // Public endpoints
+                        .requestMatchers("/api/auth/register","/api/media", "/api/auth/login").permitAll() // Public endpoints
                         .requestMatchers("/api/admin/**").hasAuthority("ADMIN") // Restricted to admin
                         .requestMatchers("/api/user/**").hasAuthority("USER")
 //                        .requestMatchers("/api/user/**").permitAll() //Restricted to user

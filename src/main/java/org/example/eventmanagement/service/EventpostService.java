@@ -32,15 +32,36 @@ public class EventpostService {
     return eventpostRepository.save(eventpost);
 
   }
-  public Page<Eventpost> getEventpostByUserid(String name, String description, String venue, String image, String category, String artist, String fare, long userid, int page, int size) {
-    Pageable pageable= PageRequest.of(page, size);
-    return eventpostRepository.findByDynamicFilters(userid, name, description, venue, image, category, artist, fare, pageable);
-  }
-  public Page<Eventpost> getAllEvents(String name, String description, String venue, String image,
-                                      String category, String artist, String fare,
-                                     Long userid, int page, int size) {
+  public Page<Eventpost> getEventpostByUserid(
+          String name, String description, String venue, String image,
+          String category, String artist, String fare, long userid, int page, int size) {
     Pageable pageable = PageRequest.of(page, size);
-    return eventpostRepository.findByDynamicFilters(userid,name, description, venue, image, category, artist, fare, pageable);
+    return eventpostRepository.findByDynamicFilters(
+            userid, name, description, venue, image, category, artist, fare, null, pageable
+    );
+  }
+  public Page<Eventpost> getAllEvents(
+          String name, String description, String venue, String image,
+          String category, String artist, String fare,
+          String searchQuery, // Add searchQuery parameter
+          Long userid, int page, int size) {
+    Pageable pageable;
+    if (size == -1) {
+      pageable = Pageable.unpaged(); // Fetch all events (no pagination)
+    } else {
+      pageable = PageRequest.of(page, size); // Fetch paginated events
+    }
+    return eventpostRepository.findByDynamicFilters(
+            userid, name, description, venue, image, category, artist, fare, searchQuery, pageable
+    );
+  }
+
+  public List<String> getAllArtist() {
+    return eventpostRepository.findArtists();
+  }
+
+  public List<String> getAllCategory() {
+    return eventpostRepository.findCategories();
   }
   }
 

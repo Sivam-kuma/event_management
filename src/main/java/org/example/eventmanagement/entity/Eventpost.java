@@ -5,6 +5,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
+import java.util.Date;
+
 @Entity
 
 public class Eventpost {
@@ -19,6 +21,8 @@ public class Eventpost {
     String category;
     String artist;
     String fare;
+    String fromTime;
+    String toTime;
 
     public Eventpost() {
     }
@@ -57,6 +61,22 @@ public class Eventpost {
 
     public String getFare() {
         return fare;
+    }
+
+    public String getFromTime() {
+        return fromTime;
+    }
+
+    public String getToTime() {
+        return toTime;
+    }
+
+    public void setToTime(String toTime) {
+        this.toTime = toTime;
+    }
+
+    public void setFromTime(String fromTime) {
+        this.fromTime = fromTime;
     }
 
     public void setId(long id) {

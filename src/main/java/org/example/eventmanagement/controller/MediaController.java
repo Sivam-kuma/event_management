@@ -28,7 +28,7 @@ public class MediaController {
             // Get the URL of the uploaded file
             String fileUrl = (String) uploadResult.get("url");
 
-            return ResponseEntity.ok("File uploaded successfully. File URL: " + fileUrl);
+            return ResponseEntity.ok(fileUrl);
         } catch (IOException e) {
             e.printStackTrace();
             return ResponseEntity.status(500).body("File upload failed.");
