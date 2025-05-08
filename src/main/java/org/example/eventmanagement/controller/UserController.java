@@ -3,12 +3,12 @@ package org.example.eventmanagement.controller;
 import org.example.eventmanagement.entity.Eventpost;
 import org.example.eventmanagement.service.EventpostService;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,11 +27,14 @@ public class UserController {
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String artist,
             @RequestParam(required = false) String fare,
-            @RequestParam(required = false) String searchQuery, // Add searchQuery parameter
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(required = false) String searchQuery,
+            @PageableDefault(size = Integer.MAX_VALUE) Pageable pageable) {
+
         Page<Eventpost> events = eventpostService.getAllEvents(
-                name, description, venue, image, category, artist, fare, searchQuery, userid, page, size
+                name, description, venue, image,
+                category, artist, fare,
+                searchQuery, userid,
+                pageable  // Added pageable parameter
         );
         return ResponseEntity.ok(events);
     }
@@ -50,6 +53,23 @@ public class UserController {
         if(categories.size() > 0) {
             return ResponseEntity.ok(categories);
         }else{
+            return ResponseEntity.notFound().build();
+        }
+    }
+    @PutMapping("/booking/{id}")
+    public ResponseEntity<List<Eventpost>> updateBooking(@PathVariable Long id) {
+        try{
+            List<Eventpost>  postlist=eventpostService.updateCount(id);
+            return ResponseEntity.ok(postlist);
+        }catch(Exception e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+    @GetMapping("/trending")
+    public ResponseEntity<List<Eventpost>> getTrending() {
+        try{
+            return ResponseEntity.ok(eventpostService.trendingEvents());
+        }catch(Exception e){
             return ResponseEntity.notFound().build();
         }
     }

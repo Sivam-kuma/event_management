@@ -3,14 +3,13 @@ package org.example.eventmanagement.service;
 import org.example.eventmanagement.entity.Eventpost;
 import org.example.eventmanagement.repository.EventpostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 public class EventpostService {
@@ -33,26 +32,28 @@ public class EventpostService {
 
   }
   public Page<Eventpost> getEventpostByUserid(
-          String name, String description, String venue, String image,
-          String category, String artist, String fare, long userid, int page, int size) {
-    Pageable pageable = PageRequest.of(page, size);
+          String name, String description, String venue,
+          String image, String category, String artist,
+          String fare, long userid,
+          Pageable pageable  // Added
+  ) {  // Removed page/size
     return eventpostRepository.findByDynamicFilters(
-            userid, name, description, venue, image, category, artist, fare, null, pageable
+            userid, name, description, venue,
+            image, category, artist, fare,
+            null, pageable
     );
   }
+
   public Page<Eventpost> getAllEvents(
-          String name, String description, String venue, String image,
-          String category, String artist, String fare,
-          String searchQuery, // Add searchQuery parameter
-          Long userid, int page, int size) {
-    Pageable pageable;
-    if (size == -1) {
-      pageable = Pageable.unpaged(); // Fetch all events (no pagination)
-    } else {
-      pageable = PageRequest.of(page, size); // Fetch paginated events
-    }
+          String name, String description, String venue,
+          String image, String category, String artist,
+          String fare, String searchQuery, Long userid,
+          Pageable pageable  // Added
+  ) {
     return eventpostRepository.findByDynamicFilters(
-            userid, name, description, venue, image, category, artist, fare, searchQuery, pageable
+            userid, name, description, venue,
+            image, category, artist, fare,
+            searchQuery, pageable
     );
   }
 
@@ -63,6 +64,15 @@ public class EventpostService {
   public List<String> getAllCategory() {
     return eventpostRepository.findCategories();
   }
+  public List<Eventpost> updateCount( long id){
+    Eventpost eventposts = eventpostRepository.findById(id);
+        eventposts.setCount(eventposts.getCount() + 1);
+         eventpostRepository.save(eventposts);
+        return eventpostRepository.findAll();
+  }
+   public List<Eventpost> trendingEvents(){
+    return eventpostRepository.findTop5ByOrderByCountDesc();
+   }
   }
 
 

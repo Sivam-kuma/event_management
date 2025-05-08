@@ -23,6 +23,15 @@ public class Eventpost {
     String fare;
     String fromTime;
     String toTime;
+    long count=0;
+
+    public void setCount(long count) {
+        this.count = count;
+    }
+
+    public long getCount() {
+        return count;
+    }
 
     public Eventpost() {
     }
