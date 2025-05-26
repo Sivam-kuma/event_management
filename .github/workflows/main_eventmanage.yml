@@ -35,7 +35,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: java-app
-          path: build/libs/*.jar
+          path: build/libs/*-0.0.1-SNAPSHOT.jar # replace with your actual jar name if different
 
   deploy:
     runs-on: ubuntu-latest
@@ -52,8 +52,11 @@ jobs:
         with:
           name: java-app
 
-      - name: List Files
-        run: ls -la
+      - name: Rename JAR for Deployment
+        run: |
+          JAR_FILE=$(ls *.jar | grep -v plain)
+          echo "Using $JAR_FILE"
+          mv "$JAR_FILE" app.jar
 
       - name: Azure Login
         uses: azure/login@v2
@@ -67,4 +70,4 @@ jobs:
         with:
           app-name: 'eventmanage'
           slot-name: 'Production'
-          package: build/libs/app.jar
+          package: app.jar
